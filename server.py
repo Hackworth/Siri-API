@@ -11,10 +11,11 @@ from search import search
 # Configuration area #
 ######################
 
-squid_hostname = "zimmer" # Hostname or IP address of the server which is running squid proxy
+squid_hostname = "idrin" # Hostname or IP address of the server which is running squid proxy
 squid_port = 3128 # Port of squid (change only if you changed it in squid configuration)
-google_domain = ".google.co.uk" # Domain of "the" Google which is opened from your language. Consult readme for more information
-keyword = "Siri" # By default this is siri. You can change this to any other (well recognized) keyword, CASE SENSITIVE!!!
+google_domain = ".google.com" # Domain of Google which is opened from your language. Consult readme for more information
+yahoo_domain = ".yahoo.com" # Domain of Yahoo which is opened from your language. Consult readme for more information
+keyword = "Siri" # This is only used for Google. Who wants to search with Yahoo anyways?
 
 ######################
 
@@ -30,6 +31,7 @@ class Handler(http.server.SimpleHTTPRequestHandler):
         global squid_hostname
         global squid_port
         global google_domain
+        global yahoo_domain
         global keyword
         
         parts = self.path.split("?") #Extract requested file and get parameters from path
@@ -44,6 +46,8 @@ class Handler(http.server.SimpleHTTPRequestHandler):
                 for raw_argument in raw_arguments[:]:
                     argument = raw_argument.split("=", 1)
                     arguments[argument[0]] = argument[1]
+                    if (argument[0] == "p"): # Yahoo uses search?p= so lets copy that to q=, which is what Google uses.
+                        arguments["q"] = argument[1]
         except:
             print ("No get parameters")
         
@@ -60,8 +64,9 @@ class Handler(http.server.SimpleHTTPRequestHandler):
             self.document = open('proxy.pac', 'r').read()
             self.document = self.document.replace('<keyword>', keyword.lower(), 1)
             self.document = self.document.replace('<google_domain>', google_domain, 1)
-            self.document = self.document.replace('<squid_host>', squid_hostname, 1)
-            self.document = self.document.replace('<squid_port>', str(squid_port), 1)
+            self.document = self.document.replace('<yahoo_domain>', yahoo_domain, 1)
+            self.document = self.document.replace('<squid_host>', squid_hostname, 2)
+            self.document = self.document.replace('<squid_port>', str(squid_port), 2)
             self.send_response(200)
             self.send_header('Content-type', 'x-ns-proxy-autoconfig')
             self.end_headers()
