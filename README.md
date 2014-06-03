@@ -1,5 +1,5 @@
-Siri-API
 ========
+Siri-API
 
 Siri-API is a tool which opens Siri for your own wishes WITHOUT the requirement of a Jailbreak. It intercepts Yahoo searches and forwards them to [SPVoice](https://github.com/Hackworth/SPVoice), or runs internally defined commands in Python 3, depending on how you have it configured. Siri-API is configured to work with [SPVoice](https://github.com/Hackworth/SPVoice) without any configuration changes. Opening Siri and saying <code>"Yahoo turn on kitchen lights"</code> or <code>"Yahoo watch Game of Thrones Season 4 Episode 3"</code> is how I use it at my house. Alternatively, it also works with Google, with a keyword, which is by default "Siri." For example, "Google Siri turn off hallway" or searching for "Siri turn off hallway" in Safari. 
 
@@ -44,8 +44,7 @@ Generate an SSL Certificate to impersonate https://google.com or https://yahoo.c
 Create a DB for dynamically generated certificates:
 
     sudo mkdir /usr/local/squid/var/lib
-    sudo /usr/local/squid/libexec/ssl_crtd -c -s
-    /usr/local/squid/var/lib/ssl_db -M 4MB
+    sudo /usr/local/squid/libexec/ssl_crtd -c -s /usr/local/squid/var/lib/ssl_db -M 4MB
     sudo chown -R squid:squid /usr/local/squid/var/lib/ssl_db/
 
 Install Siri-API:
