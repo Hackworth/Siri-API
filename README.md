@@ -55,22 +55,24 @@ Install Siri-API:
     sudo mv /usr/local/squid/etc/squid.conf /usr/local/squid/etc/squid.conf_BACKUP
     sudo cp squid.conf /usr/local/squid/etc/squid.conf
 
-Enable IP Forwarding and modify iptables:
+Modify server.py and enter your server's hostname or IP Address under <code>squid_hostname</code>:
+
+    vim ~/siri/Siri-API/server.py
+
+Enable IP Forwarding, modify iptables, and start Squid:
 
     sudo su
     echo "1" > /proc/sys/net/ipv4/ip_forward
     iptables -t nat -A PREROUTING -i eth0 -p tcp -m tcp --dport 443 -j REDIRECT --to-ports 3128
     iptables -I INPUT -p tcp -m tcp --dport 3128 -j ACCEPT
-    logout
+    /usr/local/squid/sbin/squid
+    exit
 
-Modify server.py and enter your server's hostname or IP Address under <code>squid_hostname</code>:
+Finally, start Siri-API:
 
-    vim ~/siri/Siri-API/server.py
-
-Finally, start the Squid Proxy and Siri-API:
-
-    sudo /usr/local/squid/sbin/squid
     python3 ~/siri/Siri-API/server.py
+
+The above commands to enable forwarding, modify iptables, start squid and Siri-API need to be ran at startup on your server.
 
 On your iOS device, naviagate to your Wifi settings, change your proxy to auto, and enter
 
